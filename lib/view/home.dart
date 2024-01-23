@@ -22,35 +22,41 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xff136DFF),
-          title: TabBar(
+          title: TabBar.secondary(
             dividerColor: Colors.transparent,
+            unselectedLabelColor: Colors.white70,
             indicatorColor: Colors.white,
-            // indicatorPadding: EdgeInsets.all(2.2),
+            unselectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+              letterSpacing: 0,
+            ),
+            labelStyle: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1,
+
+                decorationStyle: TextDecorationStyle.solid),
+            indicatorWeight: 3,
+            indicator: UnderlineTabIndicator(
+              borderRadius: BorderRadius.circular(20),
+            ),
             indicatorSize: TabBarIndicatorSize.label,
-            indicatorWeight: 1.6,
             splashBorderRadius: BorderRadius.circular(10),
             overlayColor: MaterialStatePropertyAll(
               Color(0xff136DFF),
             ),
             tabs: [
-              TextButton(
-                onPressed: () {},
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Text(
-                    "Music",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
+              FittedBox(
+                fit: BoxFit.cover,
+                child: Text(
+                  "Music",
                 ),
               ),
-              TextButton(
-                onPressed: () {},
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Text(
-                    "Jay shree ram",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
+              FittedBox(
+                fit: BoxFit.cover,
+                child: Text(
+                  "Podcasts",
                 ),
               ),
             ],
@@ -69,7 +75,7 @@ class _HomeState extends State<Home> {
         body: TabBarView(
           clipBehavior: Clip.antiAlias,
           children: [
-            Music(),
+            Music(map:{}),
             Podcast(),
           ],
         ),
