@@ -5,13 +5,18 @@ import 'dart:math';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sargam_beats/model/ganalist/arrijitsonglist.dart';
+import 'package:provider/provider.dart';
+import 'package:sargam_beats/controller/videocontroller.dart';
+import 'package:sargam_beats/model/ganalist/arrijitsong.dart';
+import 'package:sargam_beats/model/list/bannerlist.dart';
 
 class DetailPage extends StatefulWidget {
   Map<String, dynamic>? map = {};
-  final int? index;
 
-  DetailPage({Key? key, this.map, this.index}) : super(key: key);
+  DetailPage({
+    Key? key,
+    this.map,
+  }) : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -32,11 +37,13 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    int index = Provider.of<VideoProvider>(context, listen: false).index;
+    List<Audio>? artist = artistList[index]["artist"];
     assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
     assetsAudioPlayer.open(
       Playlist(
-        audios: arrSongList,
         startIndex: 0,
+        audios: arrSongList,
       ),
       autoStart: false,
     );
@@ -189,8 +196,18 @@ class _DetailPageState extends State<DetailPage> {
                   SliverList.builder(
                     itemCount: arrSongList.length,
                     itemBuilder: (context, index) {
-                      var ar = arrSongList[index];
-
+                      var ar=arrSongList[index];
+                      // List<Audio>? artist = artistList[index]["artist"];
+                      // var ar = artist;
+                     // var list= ar?.map((e) => (e) {
+                     //        Audio.network(e[index],
+                     //            metas: Metas(
+                     //              title: e[index],
+                     //              artist: e[index],
+                     //              album: e[index],
+                     //              image: e[index],
+                     //            ));
+                     //      });
                       return StreamBuilder<Playing?>(
                           stream: assetsAudioPlayer.current,
                           builder: (context, snapshot) {
@@ -598,9 +615,6 @@ class _DetailPageState extends State<DetailPage> {
                                                                   } else {
                                                                     assetsAudioPlayer
                                                                         .playOrPause();
-
-                                                                    print(
-                                                                        " index: ${assetsAudioPlayer.playlistPlayAtIndex(index)}");
                                                                   }
                                                                 },
                                                                 icon: Icon(
@@ -626,11 +640,12 @@ class _DetailPageState extends State<DetailPage> {
                                                     assetsAudioPlayer.next(
                                                         keepLoopMode: true,
                                                         stopIfLast: false);
-                                                    var al=assetsAudioPlayer
+                                                    var al = assetsAudioPlayer
                                                         .playlist?.audios
                                                         .indexOf(
                                                             arrSongList[index]);
-                                                    print("index chhe aa ok${al}");
+                                                    print(
+                                                        "index chhe aa ok${al}");
                                                   },
                                                   icon: Icon(
                                                     CupertinoIcons
@@ -691,8 +706,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     MediaQuery.sizeOf(context)
                                                             .height *
                                                         1,
-                                                child:
-                                                Stack(
+                                                child: Stack(
                                                   clipBehavior: Clip.antiAlias,
                                                   children: [
                                                     Align(

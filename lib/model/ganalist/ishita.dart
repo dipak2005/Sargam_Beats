@@ -13,11 +13,11 @@ List<Audio> ishItaSongList = [
     ),
   ),
   Audio.network("https://pagalfree.com/musics/128-Meri%20Sohniya%20-%20Ishita%20Vishwakarma%20128%20Kbps.mp3",
-  metas: Metas(
-    image: MetasImage.network("https://pagalfree.com/images/128Meri%20Sohniya%20-%20Ishita%20Vishwakarma%20128%20Kbps.jpg"),
-    album: "Meri Sohniya",
-    artist: "Ishita Vishwakarma, Gireesh Thakur",
-    title: "Meri Sohniya",
-  )
+      metas: Metas(
+        image: MetasImage.network("https://pagalfree.com/images/128Meri%20Sohniya%20-%20Ishita%20Vishwakarma%20128%20Kbps.jpg"),
+        album: "Meri Sohniya",
+        artist: "Ishita Vishwakarma, Gireesh Thakur",
+        title: "Meri Sohniya",
+      )
   ),
 ];

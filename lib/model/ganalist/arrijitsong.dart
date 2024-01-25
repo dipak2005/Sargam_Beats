@@ -45,25 +45,25 @@ List<Audio> arrSongList = [
   Audio.network(
     "https://pagalfree.com/musics/128-Ruaan%20-%20Tiger%203%20128%20Kbps.mp3",
     metas: Metas(
-      title: "Ruaan",
-      artist: "Pritam, Arijit Singh, Irshad Kamil",
-      album: "Tiger 3",
-      image: MetasImage.network(
-          "https://pagalfree.com/images/128Ruaan%20-%20Tiger%203%20128%20Kbps.jpg"),
-      extra: {
-         "Lyricist": "Irshad Kamil",
-      }
+        title: "Ruaan",
+        artist: "Pritam, Arijit Singh, Irshad Kamil",
+        album: "Tiger 3",
+        image: MetasImage.network(
+            "https://pagalfree.com/images/128Ruaan%20-%20Tiger%203%20128%20Kbps.jpg"),
+        extra: {
+          "Lyricist": "Irshad Kamil",
+        }
     ),
   ),
   Audio.network("https://pagalfree.com/musics/128-Satranga%20-%20Animal%20128%20Kbps.mp3",
     metas: Metas(
-      image: MetasImage.network("https://pagalfree.com/images/128Satranga%20-%20Animal%20128%20Kbps.jpg"),
-      album: "Animal",
-      artist: "Arijit Singh, Shreyas Puranik, Siddharth-Garima",
-      title: "Satranga",
-      extra: {
-        "Lyricist": " Siddharth-Garima",
-      }
+        image: MetasImage.network("https://pagalfree.com/images/128Satranga%20-%20Animal%20128%20Kbps.jpg"),
+        album: "Animal",
+        artist: "Arijit Singh, Shreyas Puranik, Siddharth-Garima",
+        title: "Satranga",
+        extra: {
+          "Lyricist": " Siddharth-Garima",
+        }
     ),
   ),
 ];

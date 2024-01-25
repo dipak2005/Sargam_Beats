@@ -22,11 +22,11 @@ List<Audio> darshanSongList = [
     ),
   ),
   Audio.network("https://pagalfree.com/musics/128-Chogada%20-%20Loveyatri%20-%20A%20Journey%20Of%20Love%20128%20Kbps.mp3",
-  metas: Metas(
-    title: "Chogada",
-    artist: "Darshan Raval, Asees Kaur",
-    album: "Loveyatri",
-    image: MetasImage.network("https://pagalfree.com/images/128Chogada%20-%20Loveyatri%20-%20A%20Journey%20Of%20Love%20128%20Kbps.jpg"),
-  ),
+    metas: Metas(
+      title: "Chogada",
+      artist: "Darshan Raval, Asees Kaur",
+      album: "Loveyatri",
+      image: MetasImage.network("https://pagalfree.com/images/128Chogada%20-%20Loveyatri%20-%20A%20Journey%20Of%20Love%20128%20Kbps.jpg"),
+    ),
   ),
 ];
