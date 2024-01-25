@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sargam_beats/controller/videocontroller.dart';
@@ -35,7 +36,6 @@ class _HomeState extends State<Home> {
                 fontSize: 25,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1,
-
                 decorationStyle: TextDecorationStyle.solid),
             indicatorWeight: 3,
             indicator: UnderlineTabIndicator(
@@ -75,8 +75,58 @@ class _HomeState extends State<Home> {
         body: TabBarView(
           clipBehavior: Clip.antiAlias,
           children: [
-            Music(map:{}),
+            Music(map: {}),
             Podcast(),
+          ],
+        ),
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text("data"),
+            ),
+            NavigationBar(
+              backgroundColor: Color(0xff136DFF),
+              height: MediaQuery.sizeOf(context).height * 0.07,
+              animationDuration: Duration(microseconds: 200),
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+              destinations: [
+                NavigationDestination(
+                  icon: Icon(
+                    Icons.home_filled,
+                    color: Colors.white,
+                  ),
+                  label: "Home",
+                  tooltip: "Home",
+                ),
+                NavigationDestination(
+                  icon: Icon(
+                    CupertinoIcons.search,
+                    color: Colors.white,
+                  ),
+                  label: "Search",
+                  tooltip: "Search",
+                ),
+                NavigationDestination(
+                  icon: Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  label: "Play",
+                  tooltip: "Play",
+                ),
+                NavigationDestination(
+                  icon: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  label: "MyLibrary",
+                  tooltip: "MyLibrary",
+                ),
+              ],
+            ),
           ],
         ),
       ),

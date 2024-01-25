@@ -11,6 +11,7 @@ class VideoProvider extends ChangeNotifier {
   int pIndex = 0;
   Timer? timer;
   final assetsAudioPlayer = AssetsAudioPlayer();
+  int index = 0;
 
   void changeIndex(int index) {
     pIndex = index;
@@ -18,17 +19,25 @@ class VideoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-void startTimer() {
-  timer ??= Timer.periodic(
-    Duration(seconds: 2),
-        (timer) {
-      pIndex++;
-      if (pIndex > 5) {
-        pIndex = 0;
-      }
-      carouselController.animateToPage(pIndex,
-        duration: Duration(seconds: 2), curve: Curves.bounceIn,);
-    },
-  );
-}
+  void artistIndex(int artistIndex) {
+    index = artistIndex;
+    notifyListeners();
+  }
+
+  void startTimer() {
+    timer ??= Timer.periodic(
+      Duration(seconds: 2),
+      (timer) {
+        pIndex++;
+        if (pIndex > 5) {
+          pIndex = 0;
+        }
+        carouselController.animateToPage(
+          pIndex,
+          duration: Duration(seconds: 2),
+          curve: Curves.bounceIn,
+        );
+      },
+    );
+  }
 }

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sargam_beats/controller/videocontroller.dart';
 import 'package:sargam_beats/view/detailpage.dart';
 import 'package:sargam_beats/view/home.dart';
+import 'package:sargam_beats/view/music.dart';
 import 'package:sargam_beats/view/splash.dart';
 
 void main() {
@@ -31,7 +32,8 @@ class Sargam_Beats extends StatelessWidget {
         routes: {
           "/": (context) => Splash(),
           "Home": (context) => Home(),
-          "DetailPage": (context) => DetailPage(map:{}),
+          "Music": (context) => Music(),
+          "DetailPage": (context) => DetailPage(),
         },
       ),
     );
