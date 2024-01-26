@@ -2,7 +2,7 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 
-List<Audio> shreyaSongList=[
+List<Audio> tuLsiSongList=[
   Audio.network("https://pagalfree.com/musics/128-Pal%20-%20Jalebi%20128%20Kbps.mp3",
     metas: Metas(
       image: MetasImage.network("https://pagalfree.com/images/128Pal%20-%20Jalebi%20128%20Kbps.jpg"),

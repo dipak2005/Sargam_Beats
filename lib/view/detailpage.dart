@@ -8,15 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sargam_beats/controller/videocontroller.dart';
 import 'package:sargam_beats/model/ganalist/arrijitsong.dart';
-import 'package:sargam_beats/model/list/bannerlist.dart';
+
+import 'package:sargam_beats/model/recentlist.dart';
 
 class DetailPage extends StatefulWidget {
   Map<String, dynamic>? map = {};
+  final int? index;
+  List<Audio>? audio;
 
-  DetailPage({
-    Key? key,
-    this.map,
-  }) : super(key: key);
+  DetailPage({Key? key, this.map, this.index, this.audio}) : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -37,13 +37,12 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    int index = Provider.of<VideoProvider>(context, listen: false).index;
-    List<Audio>? artist = artistList[index]["artist"];
+    // int index = Provider.of<VideoProvider>(context, listen: false).index;
+    // List<Audio>? artist = artistList[index]["artist"];
     assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
     assetsAudioPlayer.open(
       Playlist(
-        startIndex: 0,
-        audios: arrSongList,
+        audios: widget.audio,
       ),
       autoStart: false,
     );
@@ -194,27 +193,29 @@ class _DetailPageState extends State<DetailPage> {
                     )
                   ]),
                   SliverList.builder(
-                    itemCount: arrSongList.length,
+                    itemCount: widget.audio?.length,
                     itemBuilder: (context, index) {
-                      var ar=arrSongList[index];
+                      var ar = widget.audio?[index];
                       // List<Audio>? artist = artistList[index]["artist"];
                       // var ar = artist;
-                     // var list= ar?.map((e) => (e) {
-                     //        Audio.network(e[index],
-                     //            metas: Metas(
-                     //              title: e[index],
-                     //              artist: e[index],
-                     //              album: e[index],
-                     //              image: e[index],
-                     //            ));
-                     //      });
+                      // var list= ar?.map((e) => (e) {
+                      //        Audio.network(e[index],
+                      //            metas: Metas(
+                      //              title: e[index],
+                      //              artist: e[index],
+                      //              album: e[index],
+                      //              image: e[index],
+                      //            ));
+                      //      });
                       return StreamBuilder<Playing?>(
                           stream: assetsAudioPlayer.current,
                           builder: (context, snapshot) {
                             var image = snapshot
                                     .data?.playlist.current.metas.image?.path ??
                                 "";
-
+                            var title =
+                                snapshot.data?.playlist.current.metas.title ??
+                                    "";
                             return ListTile(
                               onTap: () {
                                 showBottomSheet(
@@ -291,13 +292,35 @@ class _DetailPageState extends State<DetailPage> {
                                                   horizontal: 10),
                                               clipBehavior: Clip.antiAlias,
                                               decoration: BoxDecoration(
-                                                  color: Colors.red,
+                                                  color: Colors.transparent,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10)),
-                                              child: Image.network(
-                                                  "${ar.metas.image?.path}",
-                                                  fit: BoxFit.cover),
+                                              child: StreamBuilder<Playing?>(
+                                                  stream:
+                                                      assetsAudioPlayer.current,
+                                                  builder: (context, snapshot) {
+                                                    var image1 = snapshot
+                                                            .data
+                                                            ?.playlist
+                                                            .current
+                                                            .metas
+                                                            .image
+                                                            ?.path ??
+                                                        '';
+                                                    if (snapshot.data != null) {
+                                                      return Image.network(
+                                                          "${image1}",
+                                                          fit: BoxFit.cover);
+                                                    } else {
+                                                      return Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Colors.white,
+                                                        ),
+                                                      );
+                                                    }
+                                                  }),
                                             ),
                                             SizedBox(
                                               height: MediaQuery.sizeOf(context)
@@ -306,14 +329,26 @@ class _DetailPageState extends State<DetailPage> {
                                             ),
                                             Align(
                                               alignment: Alignment(-0.8, 0),
-                                              child: Text(
-                                                ar.metas.title ?? "",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 25,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                              ),
+                                              child: StreamBuilder<Playing?>(
+                                                  stream:
+                                                      assetsAudioPlayer.current,
+                                                  builder: (context, snapshot) {
+                                                    var title = snapshot
+                                                            .data
+                                                            ?.playlist
+                                                            .current
+                                                            .metas
+                                                            .title ??
+                                                        "";
+                                                    return Text(
+                                                      title,
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 25,
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                    );
+                                                  }),
                                             ),
                                             Align(
                                               alignment: Alignment(-0.8, 0),
@@ -339,131 +374,146 @@ class _DetailPageState extends State<DetailPage> {
                                                 ),
                                               ),
                                             ),
-                                            ListTile(
-                                              title: Text(
-                                                "${ar.metas.title} From (${ar.metas.album})",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 30),
-                                              ),
-                                              subtitle: Text(
-                                                "${ar.metas.title} From (${ar.metas.album}) - ${ar.metas.artist}",
-                                                style: TextStyle(
-                                                    color: Colors.white70,
-                                                    fontSize: 15),
-                                              ),
-                                              trailing: IconButton(
-                                                icon: Icon(
-                                                  Icons.more_vert_sharp,
-                                                  color: Colors.white,
-                                                ),
-                                                onPressed: () {
-                                                  showModalBottomSheet(
-                                                    isDismissible: false,
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    isScrollControlled: true,
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return SingleChildScrollView(
-                                                        child: Column(
-                                                          children: [
-                                                            Container(
-                                                              color: Colors
+                                            StreamBuilder<Playing?>(
+                                                stream:
+                                                    assetsAudioPlayer.current,
+                                                builder: (context, snapshot) {
+                                                  var title = snapshot
+                                                          .data
+                                                          ?.playlist
+                                                          .current
+                                                          .metas
+                                                          .title ??
+                                                      "";
+                                                  var album = snapshot
+                                                          .data
+                                                          ?.playlist
+                                                          .current
+                                                          .metas
+                                                          .album ??
+                                                      "";
+                                                  var artist = snapshot
+                                                          .data
+                                                          ?.playlist
+                                                          .current
+                                                          .metas
+                                                          .artist ??
+                                                      "";
+                                                  return ListTile(
+                                                    title: Text(
+                                                      "${title} From (${album})",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 30),
+                                                    ),
+                                                    subtitle: Text(
+                                                      "${title} From (${album}) - ${artist}",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 15),
+                                                    ),
+                                                    trailing: IconButton(
+                                                      icon: Icon(
+                                                        Icons.more_vert_sharp,
+                                                        color: Colors.white,
+                                                      ),
+                                                      onPressed: () {
+                                                        showModalBottomSheet(
+                                                          isDismissible: false,
+                                                          backgroundColor:
+                                                              Colors
                                                                   .transparent,
-                                                              height: MediaQuery
-                                                                          .sizeOf(
-                                                                              context)
-                                                                      .height *
-                                                                  1,
-                                                              child: Stack(
-                                                                clipBehavior: Clip
-                                                                    .antiAlias,
+                                                          isScrollControlled:
+                                                              true,
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return SingleChildScrollView(
+                                                              child: Column(
                                                                 children: [
-                                                                  Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .bottomCenter,
+                                                                  Container(
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    height:
+                                                                        MediaQuery.sizeOf(context).height *
+                                                                            1,
                                                                     child:
-                                                                        Container(
-                                                                      height:
-                                                                          MediaQuery.sizeOf(context).height *
-                                                                              0.7,
-                                                                      width: MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .width,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(10)),
-                                                                        gradient: LinearGradient(
-                                                                            colors: [
-                                                                              Color(0xff208EBA),
-                                                                              Color(0xff416DFF),
-                                                                              // Color(0xff2242FF),
-                                                                              Color(0xff136DFF),
-                                                                              Color(0xff2492FF),
-                                                                              Color(0xff17B7FF),
-                                                                              Color(0xff136DFF),
-                                                                            ],
-                                                                            begin:
-                                                                                Alignment.topLeft,
-                                                                            end: Alignment.bottomRight),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Positioned(
-                                                                    left: 100,
-                                                                    top: 140,
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          MediaQuery.sizeOf(context).height /
-                                                                              4,
-                                                                      width:
-                                                                          MediaQuery.sizeOf(context).width /
-                                                                              2,
+                                                                        Stack(
                                                                       clipBehavior:
                                                                           Clip.antiAlias,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10),
-                                                                      ),
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: [
-                                                                          Image
-                                                                              .network(
-                                                                            "${ar.metas.image?.path}",
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment:
+                                                                              Alignment.bottomCenter,
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                MediaQuery.sizeOf(context).height * 0.7,
+                                                                            width:
+                                                                                MediaQuery.sizeOf(context).width,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                              gradient: LinearGradient(colors: [
+                                                                                Color(0xff208EBA),
+                                                                                Color(0xff416DFF),
+                                                                                // Color(0xff2242FF),
+                                                                                Color(0xff136DFF),
+                                                                                Color(0xff2492FF),
+                                                                                Color(0xff17B7FF),
+                                                                                Color(0xff136DFF),
+                                                                              ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                                                                            ),
                                                                           ),
-                                                                        ],
-                                                                      ),
+                                                                        ),
+                                                                        Positioned(
+                                                                          left:
+                                                                              100,
+                                                                          top:
+                                                                              140,
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                MediaQuery.sizeOf(context).height / 4,
+                                                                            width:
+                                                                                MediaQuery.sizeOf(context).width / 2,
+                                                                            clipBehavior:
+                                                                                Clip.antiAlias,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                            ),
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisSize: MainAxisSize.min,
+                                                                              children: [
+                                                                                Image.network(
+                                                                                  "${ar?.metas.image?.path}",
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
                                                                   ),
+                                                                  SizedBox(
+                                                                    height: MediaQuery.sizeOf(context)
+                                                                            .height *
+                                                                        0.01,
+                                                                  ),
+                                                                  Text(
+                                                                      "${ar?.metas.title} From (${ar?.metas.album})")
                                                                 ],
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                              height: MediaQuery
-                                                                          .sizeOf(
-                                                                              context)
-                                                                      .height *
-                                                                  0.01,
-                                                            ),
-                                                            Text(
-                                                                "${ar.metas.title} From (${ar.metas.album})")
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                    ),
                                                   );
-                                                },
-                                              ),
-                                            ),
+                                                }),
                                             StreamBuilder<Duration>(
                                                 stream: assetsAudioPlayer
                                                     .currentPosition,
@@ -474,7 +524,7 @@ class _DetailPageState extends State<DetailPage> {
                                                   var minute = snapshot
                                                           .data?.inMinutes ??
                                                       0;
-                                                  print(sec);
+
                                                   return StreamBuilder<
                                                           Playing?>(
                                                       stream: assetsAudioPlayer
@@ -564,8 +614,8 @@ class _DetailPageState extends State<DetailPage> {
                                                         keepLoopMode: true);
                                                     assetsAudioPlayer
                                                         .playlist?.audios
-                                                        .indexOf(
-                                                            arrSongList[index]);
+                                                        .indexOf(widget
+                                                            .audio![index]);
                                                   },
                                                   icon: Icon(
                                                     CupertinoIcons
@@ -615,6 +665,17 @@ class _DetailPageState extends State<DetailPage> {
                                                                   } else {
                                                                     assetsAudioPlayer
                                                                         .playOrPause();
+                                                                    recentPlayed
+                                                                        .add(widget
+                                                                            .audio![index]);
+                                                                    assetsAudioPlayer
+                                                                        .playlistPlayAtIndex(
+                                                                            index);
+                                                                    Provider.of<VideoProvider>(
+                                                                            context,
+                                                                            listen:
+                                                                                false)
+                                                                        .refresh();
                                                                   }
                                                                 },
                                                                 icon: Icon(
@@ -644,8 +705,6 @@ class _DetailPageState extends State<DetailPage> {
                                                         .playlist?.audios
                                                         .indexOf(
                                                             arrSongList[index]);
-                                                    print(
-                                                        "index chhe aa ok${al}");
                                                   },
                                                   icon: Icon(
                                                     CupertinoIcons
@@ -677,17 +736,20 @@ class _DetailPageState extends State<DetailPage> {
                                   },
                                 );
                               },
-                              leading: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child:
-                                      Image.network("${ar.metas.image?.path}")),
+                              leading: snapshot.data != null
+                                  ? SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: Image.network(
+                                          "${ar?.metas.image?.path}"))
+                                  : CircularProgressIndicator(
+                                      color: Colors.white),
                               title: Text(
-                                "${ar.metas.title}",
+                                "${ar?.metas.title}",
                                 style: TextStyle(color: Colors.white),
                               ),
                               subtitle: Text(
-                                "${ar.metas.artist}",
+                                "${ar?.metas.artist}",
                                 style: TextStyle(color: Colors.white60),
                               ),
                               trailing: IconButton(
@@ -706,83 +768,102 @@ class _DetailPageState extends State<DetailPage> {
                                                     MediaQuery.sizeOf(context)
                                                             .height *
                                                         1,
-                                                child: Stack(
-                                                  clipBehavior: Clip.antiAlias,
+                                                child: Column(
                                                   children: [
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .bottomCenter,
-                                                      child: Container(
-                                                        height:
-                                                            MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .height *
-                                                                0.7,
-                                                        width:
-                                                            MediaQuery.sizeOf(
-                                                                    context)
-                                                                .width,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10)),
-                                                          gradient: LinearGradient(
-                                                              colors: [
-                                                                Color(
-                                                                    0xff208EBA),
-                                                                Color(
-                                                                    0xff416DFF),
-                                                                // Color(0xff2242FF),
-                                                                Color(
-                                                                    0xff136DFF),
-                                                                Color(
-                                                                    0xff2492FF),
-                                                                Color(
-                                                                    0xff17B7FF),
-                                                                Color(
-                                                                    0xff136DFF),
-                                                              ],
-                                                              begin: Alignment
-                                                                  .topLeft,
-                                                              end: Alignment
-                                                                  .bottomRight),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Positioned(
-                                                      left: 100,
-                                                      top: 140,
-                                                      child: Container(
-                                                        height:
-                                                            MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .height /
-                                                                4,
-                                                        width:
-                                                            MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .width /
-                                                                2,
+                                                    Expanded(
+                                                      child: Stack(
                                                         clipBehavior:
                                                             Clip.antiAlias,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Image.network(
-                                                              "${ar.metas.image?.path}",
+                                                        children: [
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: Container(
+                                                              height: MediaQuery
+                                                                          .sizeOf(
+                                                                              context)
+                                                                      .height *
+                                                                  0.7,
+                                                              width: MediaQuery
+                                                                      .sizeOf(
+                                                                          context)
+                                                                  .width,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                                gradient: LinearGradient(
+                                                                    colors: [
+                                                                      Color(
+                                                                          0xff208EBA),
+                                                                      Color(
+                                                                          0xff416DFF),
+                                                                      // Color(0xff2242FF),
+                                                                      Color(
+                                                                          0xff136DFF),
+                                                                      Color(
+                                                                          0xff2492FF),
+                                                                      Color(
+                                                                          0xff17B7FF),
+                                                                      Color(
+                                                                          0xff136DFF),
+                                                                    ],
+                                                                    begin: Alignment
+                                                                        .topLeft,
+                                                                    end: Alignment
+                                                                        .bottomRight),
+                                                              ),
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                          Positioned(
+                                                            left: 100,
+                                                            top: 130,
+                                                            child: Container(
+                                                              height: MediaQuery
+                                                                          .sizeOf(
+                                                                              context)
+                                                                      .height /
+                                                                  3,
+                                                              width: MediaQuery
+                                                                          .sizeOf(
+                                                                              context)
+                                                                      .width /
+                                                                  2,
+                                                              clipBehavior: Clip
+                                                                  .antiAlias,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                              ),
+                                                              child:
+                                                                  SingleChildScrollView(
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    Container(
+                                                                      clipBehavior:
+                                                                          Clip.antiAlias,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(10)),
+                                                                      child: Image
+                                                                          .network(
+                                                                        "${ar?.metas.image?.path}",
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
@@ -794,8 +875,6 @@ class _DetailPageState extends State<DetailPage> {
                                                             .height *
                                                         0.01,
                                               ),
-                                              Text(
-                                                  "${ar.metas.title} From (${ar.metas.album})")
                                             ],
                                           ),
                                         );

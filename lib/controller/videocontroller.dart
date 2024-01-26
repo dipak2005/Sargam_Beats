@@ -19,6 +19,10 @@ class VideoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void refresh(){
+    notifyListeners();
+  }
+
   void artistIndex(int artistIndex) {
     index = artistIndex;
     notifyListeners();
