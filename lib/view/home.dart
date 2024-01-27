@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -10,12 +11,17 @@ import 'package:sargam_beats/model/ganalist/arrijitsong.dart';
 import 'package:sargam_beats/model/recentlist.dart';
 import 'package:sargam_beats/view/music.dart';
 import 'package:sargam_beats/view/podcast.dart';
+import 'package:sargam_beats/view/video.dart';
 import 'package:sargam_beats/view/widgets/navigation.dart';
+import 'package:video_player/video_player.dart';
 
 import '../model/ganalist/radiolist.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  Map<String, dynamic>? map = {};
+  final List<Audio>? audio;
+
+  Home({super.key, this.map, this.audio});
 
   @override
   State<Home> createState() => _HomeState();
@@ -23,8 +29,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
-
+  late VideoPlayerController controller;
+  ChewieController? chewieController;
   bool isShow = true;
+  bool isVideo = false;
+
+
+
+  @override
+  void dispose() {
+    controller.dispose();
+    chewieController?.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -39,6 +56,14 @@ class _HomeState extends State<Home> {
       ),
       autoStart: false,
     );
+
+    controller = VideoPlayerController.networkUrl(Uri.parse(
+        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"))
+      ..initialize().then((value) {
+        chewieController = ChewieController(
+            videoPlayerController: controller, autoPlay: false, looping: true);
+        setState(() {});
+      });
   }
 
   @override
@@ -110,41 +135,45 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            isShow == true
-                ? StreamBuilder<Playing?>(
-                    stream: assetsAudioPlayer.current,
-                    builder: (context, snapshot2) {
-                      var title =
-                          snapshot2.data?.playlist.current.metas.title ?? "";
-                      var image =
-                          snapshot2.data?.playlist.current.metas.image?.path ??
-                              "";
-                      var artist =
-                          snapshot2.data?.playlist.current.metas.artist ?? "";
-                      var album =
-                          snapshot2.data?.playlist.current.metas.album ?? "";
-                      return Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                                Color(0xff208EBA),
-                                Color(0xff416DFF),
-                                // Color(0xff2242FF),
-                                Color(0xff136DFF),
-                                Color(0xff2492FF),
-                                Color(0xff17B7FF),
-                                Color(0xff136DFF),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight),
-                        ),
-                        child: ListTile(
-                          onTap: () {
-                            if (isShow == true) {
-                              showBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Container(
+            StreamBuilder<Playing?>(
+              stream: assetsAudioPlayer.current,
+              builder: (context, snapshot2) {
+                var title = snapshot2.data?.playlist.current.metas.title ?? "";
+                var image =
+                    snapshot2.data?.playlist.current.metas.image?.path ?? "";
+                var artist =
+                    snapshot2.data?.playlist.current.metas.artist ?? "";
+                var album = snapshot2.data?.playlist.current.metas.album ?? "";
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      Color(0xff208EBA),
+                      Color(0xff416DFF),
+                      // Color(0xff2242FF),
+                      Color(0xff136DFF),
+                      Color(0xff2492FF),
+                      Color(0xff17B7FF),
+                      Color(0xff136DFF),
+                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  ),
+                  child: (isShow == true)
+                      ? ListTile(
+                          onTap: () async {
+                            print("isShow $isShow");
+
+                            isShow = false;
+                            setState(() {});
+                            await showBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return WillPopScope(
+                                  onWillPop: () async {
+                                    print("back");
+                                    isShow = true;
+                                    setState(() {});
+                                    return true;
+                                  },
+                                  child: Container(
                                     height: MediaQuery.sizeOf(context).height,
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
@@ -173,50 +202,76 @@ class _HomeState extends State<Home> {
                                                     .height *
                                                 0.01,
                                           ),
-                                          Container(
-                                            height: MediaQuery.sizeOf(context)
-                                                    .height /
-                                                3,
-                                            width: MediaQuery.sizeOf(context)
-                                                .width,
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
+                                          if (isVideo == true)
+                                            Container(
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height /
+                                                  3,
+                                              width: MediaQuery.sizeOf(context)
+                                                  .width,
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: StreamBuilder<Playing?>(
-                                                stream:
-                                                    assetsAudioPlayer.current,
-                                                builder: (context, snapshot) {
-                                                  var image1 = snapshot
-                                                          .data
-                                                          ?.playlist
-                                                          .current
-                                                          .metas
-                                                          .image
-                                                          ?.path ??
-                                                      "";
-                                                  var song = snapshot
-                                                      .data?.playlist.current;
-                                                  if (recentPlayed
-                                                      .contains(song)) {
-                                                    print("Already");
-                                                  } else if (song != null) {
-                                                    print(
-                                                        "object ${song.metas.title}");
-                                                    recentPlayed.add(song);
-                                                  }
-                                                  if (snapshot.data != null) {
-                                                    return Image.network(image1,
-                                                        fit: BoxFit.cover);
-                                                  } else {
-                                                    return CircularProgressIndicator(
-                                                      color: Colors.white,
-                                                    );
-                                                  }
-                                                }),
-                                          ),
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: AspectRatio(
+                                                aspectRatio: controller
+                                                    .value.aspectRatio,
+                                                child: VideoPlayer(controller),
+                                              ),
+                                            )
+                                          else
+                                            Container(
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height /
+                                                  3,
+                                              width: MediaQuery.sizeOf(context)
+                                                  .width,
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: StreamBuilder<Playing?>(
+                                                  stream:
+                                                      assetsAudioPlayer.current,
+                                                  builder: (context, snapshot) {
+                                                    var image1 = snapshot
+                                                            .data
+                                                            ?.playlist
+                                                            .current
+                                                            .metas
+                                                            .image
+                                                            ?.path ??
+                                                        "";
+                                                    var song = snapshot
+                                                        .data?.playlist.current;
+                                                    if (recentPlayed
+                                                        .contains(song)) {
+                                                      print("Already");
+                                                    } else if (song != null) {
+                                                      print(
+                                                          "object ${song.metas.title}");
+                                                      recentPlayed.add(song);
+                                                    }
+                                                    if (snapshot.data != null) {
+                                                      return Image.network(
+                                                          image1,
+                                                          fit: BoxFit.cover);
+                                                    } else {
+                                                      return Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Colors.white,
+                                                        ),
+                                                      );
+                                                    }
+                                                  }),
+                                            ),
                                           SizedBox(
                                             height: MediaQuery.sizeOf(context)
                                                     .height *
@@ -315,108 +370,126 @@ class _HomeState extends State<Home> {
                                                   ),
                                                   trailing: IconButton(
                                                     icon: Icon(
-                                                      Icons.more_vert_sharp,
+                                                      Icons
+                                                          .video_collection_outlined,
                                                       color: Colors.white,
+                                                      size: 40,
                                                     ),
                                                     onPressed: () {
-                                                      showModalBottomSheet(
-                                                        isDismissible: false,
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        isScrollControlled:
-                                                            true,
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return SingleChildScrollView(
-                                                            child: Column(
-                                                              children: [
-                                                                Container(
-                                                                  color: Colors
-                                                                      .transparent,
-                                                                  height: MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .height *
-                                                                      1,
-                                                                  child: Stack(
-                                                                    clipBehavior:
-                                                                        Clip.antiAlias,
-                                                                    children: [
-                                                                      Align(
-                                                                        alignment:
-                                                                            Alignment.bottomCenter,
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              MediaQuery.sizeOf(context).height * 0.7,
-                                                                          width:
-                                                                              MediaQuery.sizeOf(context).width,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.all(Radius.circular(10)),
-                                                                            gradient:
-                                                                                LinearGradient(colors: [
-                                                                              Color(0xff208EBA),
-                                                                              Color(0xff416DFF),
-                                                                              // Color(0xff2242FF),
-                                                                              Color(0xff136DFF),
-                                                                              Color(0xff2492FF),
-                                                                              Color(0xff17B7FF),
-                                                                              Color(0xff136DFF),
-                                                                            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Positioned(
-                                                                        left:
-                                                                            100,
-                                                                        top:
-                                                                            140,
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              MediaQuery.sizeOf(context).height / 4,
-                                                                          width:
-                                                                              MediaQuery.sizeOf(context).width / 2,
-                                                                          clipBehavior:
-                                                                              Clip.antiAlias,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
-                                                                          ),
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisSize:
-                                                                                MainAxisSize.min,
-                                                                            children: [
-                                                                              StreamBuilder<Playing?>(
-                                                                                  stream: assetsAudioPlayer.current,
-                                                                                  builder: (context, snapshot) {
-                                                                                    return Image.network(
-                                                                                      image,
-                                                                                    );
-                                                                                  }),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .height *
-                                                                      0.01,
-                                                                ),
-                                                                Text(
-                                                                    "$title From ($album)")
-                                                              ],
-                                                            ),
-                                                          );
-                                                        },
-                                                      );
+                                                      // Navigator.pushNamed(
+                                                      //     context, "Videoplay");
+                                                      // Videos(
+                                                      //   audio: radioList,
+                                                      //   map: widget.map,
+                                                      // );
+                                                      // showModalBottomSheet(
+                                                      //   isDismissible: false,
+                                                      //   backgroundColor:
+                                                      //       Colors.transparent,
+                                                      //   isScrollControlled:
+                                                      //       true,
+                                                      //   context: context,
+                                                      //   builder: (context) {
+                                                      //     return SingleChildScrollView(
+                                                      //       child: Column(
+                                                      //         children: [
+                                                      //           Container(
+                                                      //             color: Colors
+                                                      //                 .transparent,
+                                                      //             height: MediaQuery.sizeOf(
+                                                      //                         context)
+                                                      //                     .height *
+                                                      //                 1,
+                                                      //             child: Stack(
+                                                      //               clipBehavior:
+                                                      //                   Clip.antiAlias,
+                                                      //               children: [
+                                                      //                 Align(
+                                                      //                   alignment:
+                                                      //                       Alignment.bottomCenter,
+                                                      //                   child:
+                                                      //                       Container(
+                                                      //                     height:
+                                                      //                         MediaQuery.sizeOf(context).height * 0.7,
+                                                      //                     width:
+                                                      //                         MediaQuery.sizeOf(context).width,
+                                                      //                     decoration:
+                                                      //                         BoxDecoration(
+                                                      //                       borderRadius:
+                                                      //                           BorderRadius.all(Radius.circular(10)),
+                                                      //                       gradient:
+                                                      //                           LinearGradient(colors: [
+                                                      //                         Color(0xff208EBA),
+                                                      //                         Color(0xff416DFF),
+                                                      //                         // Color(0xff2242FF),
+                                                      //                         Color(0xff136DFF),
+                                                      //                         Color(0xff2492FF),
+                                                      //                         Color(0xff17B7FF),
+                                                      //                         Color(0xff136DFF),
+                                                      //                       ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                                                      //                     ),
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 Positioned(
+                                                      //                   left:
+                                                      //                       100,
+                                                      //                   top:
+                                                      //                       140,
+                                                      //                   child:
+                                                      //                       Container(
+                                                      //                     height:
+                                                      //                         MediaQuery.sizeOf(context).height / 4,
+                                                      //                     width:
+                                                      //                         MediaQuery.sizeOf(context).width / 2,
+                                                      //                     clipBehavior:
+                                                      //                         Clip.antiAlias,
+                                                      //                     decoration:
+                                                      //                         BoxDecoration(
+                                                      //                       borderRadius:
+                                                      //                           BorderRadius.circular(10),
+                                                      //                     ),
+                                                      //                     child:
+                                                      //                         Column(
+                                                      //                       mainAxisSize:
+                                                      //                           MainAxisSize.min,
+                                                      //                       children: [
+                                                      //                         StreamBuilder<Playing?>(
+                                                      //                             stream: assetsAudioPlayer.current,
+                                                      //                             builder: (context, snapshot) {
+                                                      //                               return Image.network(
+                                                      //                                 image,
+                                                      //                               );
+                                                      //                             }),
+                                                      //                       ],
+                                                      //                     ),
+                                                      //                   ),
+                                                      //                 ),
+                                                      //               ],
+                                                      //             ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             height: MediaQuery.sizeOf(
+                                                      //                         context)
+                                                      //                     .height *
+                                                      //                 0.01,
+                                                      //           ),
+                                                      //           Text(
+                                                      //               "$title From ($album)")
+                                                      //         ],
+                                                      //       ),
+                                                      //     );
+                                                      //   },
+                                                      // );
+                                                      setState(() {});
+
+                                                      chewieController?.isLive;
+                                                      if (controller
+                                                          .value.isPlaying) {
+                                                        controller.pause();
+                                                      } else {
+                                                        isVideo = true;
+                                                        controller.play();
+                                                      }
                                                     },
                                                   ),
                                                 );
@@ -572,6 +645,9 @@ class _HomeState extends State<Home> {
                                                                         assetsAudioPlayer
                                                                             .pause();
                                                                       } else {
+                                                                        isVideo ==
+                                                                            false;
+
                                                                         assetsAudioPlayer
                                                                             .playOrPause();
                                                                         recentPlayed
@@ -630,14 +706,12 @@ class _HomeState extends State<Home> {
                                         ],
                                       ),
                                     ),
-                                  );
-                                },
-                              );
-                            } else {
-                              SizedBox.shrink();
-                              Provider.of<VideoProvider>(context, listen: false)
-                                  .refresh();
-                            }
+                                  ),
+                                );
+                              },
+                            );
+                            // isShow = true;
+                            // setState(() {});
                           },
                           textColor: Colors.white,
                           leading: SizedBox(
@@ -686,11 +760,11 @@ class _HomeState extends State<Home> {
                                       );
                                     });
                               }),
-                        ),
-                      );
-                    },
-                  )
-                : SizedBox.shrink(),
+                        )
+                      : SizedBox.shrink(),
+                );
+              },
+            ),
             Navigation(),
           ],
         ),

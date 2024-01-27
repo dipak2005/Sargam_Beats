@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:sargam_beats/controller/videocontroller.dart';
 import 'package:sargam_beats/view/detailpage.dart';
 import 'package:sargam_beats/view/home.dart';
+import 'package:sargam_beats/view/list.dart';
 import 'package:sargam_beats/view/music.dart';
 import 'package:sargam_beats/view/splash.dart';
+import 'package:sargam_beats/view/video.dart';
 
 void main() {
   runApp(Sargam_Beats());
@@ -25,7 +27,7 @@ class Sargam_Beats extends StatelessWidget {
         )
       ],
       builder: (context, child) => MaterialApp(
-        title: "Sar-gam_Beats",
+        title: "Sargam_Beats",
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.system,
         initialRoute: "/",
@@ -34,6 +36,8 @@ class Sargam_Beats extends StatelessWidget {
           "Home": (context) => Home(),
           "Music": (context) => Music(),
           "DetailPage": (context) => DetailPage(),
+          "FullList": (context) => FullList(),
+          "Videoplay": (context) => Videoplay(),
         },
       ),
     );

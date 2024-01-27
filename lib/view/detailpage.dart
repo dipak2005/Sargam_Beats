@@ -10,13 +10,16 @@ import 'package:sargam_beats/controller/videocontroller.dart';
 import 'package:sargam_beats/model/ganalist/arrijitsong.dart';
 
 import 'package:sargam_beats/model/recentlist.dart';
+import 'package:sargam_beats/view/list.dart';
 
 class DetailPage extends StatefulWidget {
   Map<String, dynamic>? map = {};
   final int? index;
   List<Audio>? audio;
+  String? name;
 
-  DetailPage({Key? key, this.map, this.index, this.audio}) : super(key: key);
+  DetailPage({Key? key, this.map, this.index, this.audio, this.name})
+      : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -24,6 +27,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  bool isShow = false;
 
   @override
   void didChangeDependencies() {
@@ -44,7 +48,7 @@ class _DetailPageState extends State<DetailPage> {
       Playlist(
         audios: widget.audio,
       ),
-      autoStart: false,
+      autoStart: false,showNotification: true,notificationSettings: NotificationSettings(nextEnabled: true)
     );
   }
 
@@ -136,6 +140,7 @@ class _DetailPageState extends State<DetailPage> {
                                         } else {
                                           assetsAudioPlayer.play();
                                         }
+                                        print(widget.name);
                                       },
                                       icon: Icon(
                                         play
@@ -177,14 +182,24 @@ class _DetailPageState extends State<DetailPage> {
                   SliverList.list(children: [
                     ListTile(
                       title: Text(
-                        "Top Songs",
+                        "Top Songs :${widget.name}",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w900,
                             fontSize: 25),
                       ),
                       trailing: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return FullList(
+                                  audio: widget.audio,
+                                  name: widget.name,
+                                );
+                              },
+                            ));
+                            print(widget.name);
+                          },
                           child: Text(
                             "View All >",
                             style:
@@ -193,7 +208,7 @@ class _DetailPageState extends State<DetailPage> {
                     )
                   ]),
                   SliverList.builder(
-                    itemCount: widget.audio?.length,
+                    itemCount: 5,
                     itemBuilder: (context, index) {
                       var ar = widget.audio?[index];
                       // List<Audio>? artist = artistList[index]["artist"];
@@ -218,6 +233,7 @@ class _DetailPageState extends State<DetailPage> {
                                     "";
                             return ListTile(
                               onTap: () {
+                                isShow = true;
                                 showBottomSheet(
                                   context: context,
                                   builder: (context) {
@@ -310,7 +326,9 @@ class _DetailPageState extends State<DetailPage> {
                                                         '';
                                                     if (snapshot.data != null) {
                                                       return Image.network(
-                                                          "${image1}",
+                                                          (isShow == true)
+                                                              ? "${ar?.metas.image?.path}"
+                                                              : "${image1}",
                                                           fit: BoxFit.cover);
                                                     } else {
                                                       return Center(
@@ -341,7 +359,9 @@ class _DetailPageState extends State<DetailPage> {
                                                             .title ??
                                                         "";
                                                     return Text(
-                                                      title,
+                                                      (isShow == true)
+                                                          ? "${ar?.metas.title}"
+                                                          : title,
                                                       style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 25,
@@ -401,15 +421,20 @@ class _DetailPageState extends State<DetailPage> {
                                                       "";
                                                   return ListTile(
                                                     title: Text(
-                                                      "${title} From (${album})",
+                                                      (isShow == true)
+                                                          ? "${ar?.metas.title} From (${ar?.metas.album})"
+                                                          : "${title} From (${album})",
                                                       style: TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
                                                               FontWeight.w700,
                                                           fontSize: 30),
                                                     ),
+                                                    // stream build no thay list ni object avse
                                                     subtitle: Text(
-                                                      "${title} From (${album}) - ${artist}",
+                                                      (isShow == true)
+                                                          ? "${ar?.metas.title} From (${ar?.metas.album}) - ${ar?.metas.title}"
+                                                          : "${title} From (${album}) - ${artist}",
                                                       style: TextStyle(
                                                           color: Colors.white70,
                                                           fontSize: 15),
@@ -741,6 +766,7 @@ class _DetailPageState extends State<DetailPage> {
                                       height: 50,
                                       width: 50,
                                       child: Image.network(
+                                          isAntiAlias: true,
                                           "${ar?.metas.image?.path}"))
                                   : CircularProgressIndicator(
                                       color: Colors.white),

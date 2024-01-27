@@ -18,11 +18,21 @@ import 'package:sargam_beats/model/list/bannerlist.dart';
 import 'package:sargam_beats/model/recentlist.dart';
 import 'package:sargam_beats/model/singermodel.dart';
 import 'package:sargam_beats/view/detailpage.dart';
+import 'package:sargam_beats/view/widgets/afpage.dart';
+import 'package:sargam_beats/view/widgets/arpage.dart';
+import 'package:sargam_beats/view/widgets/bollywood.dart';
+import 'package:sargam_beats/view/widgets/darpage.dart';
+import 'package:sargam_beats/view/widgets/ishitapage.dart';
+import 'package:sargam_beats/view/widgets/nehapage.dart';
+import 'package:sargam_beats/view/widgets/shreyapage.dart';
+import 'package:sargam_beats/view/widgets/tulsipage.dart';
 
 import '../model/ganalist/radiolist.dart';
+import 'list.dart';
 
 class Music extends StatefulWidget {
   Map<String, dynamic>? map = {};
+  String? name;
 
   Music({
     Key? key,
@@ -77,6 +87,9 @@ class _MusicState extends State<Music> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.02,
+                ),
                 Consumer<VideoProvider>(
                   builder: (BuildContext context, banner, Widget? child) {
                     return CarouselSlider(
@@ -108,10 +121,10 @@ class _MusicState extends State<Music> {
                           banner.changeIndex(index);
                         },
                         autoPlayInterval: Duration(seconds: 2),
-                        aspectRatio: 2.4,
+                        aspectRatio: 2.3,
                         autoPlay: true,
                         initialPage: banner.pIndex,
-                        viewportFraction: 1.3,
+                        viewportFraction: 1.5,
                         autoPlayAnimationDuration: Duration(seconds: 2),
                         autoPlayCurve: Curves.linear,
                         clipBehavior: Clip.antiAlias,
@@ -201,7 +214,7 @@ class _MusicState extends State<Music> {
                                       settings: RouteSettings(arguments: sl),
                                       builder: (context) {
                                         return DetailPage(
-                                          map: {},
+                                          map: {}, name: sm.name,
                                           audio: audio,
                                           //     ? arrSongList[index]
                                           //     : index == 1
@@ -248,7 +261,7 @@ class _MusicState extends State<Music> {
                           Text(
                             "Artist Radio",
                             style: TextStyle(
-                                color: Colors.grey,
+                                color: Colors.white70,
                                 fontWeight: FontWeight.w500),
                           )
                         ],
@@ -256,6 +269,262 @@ class _MusicState extends State<Music> {
                     },
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Arrijit Singh",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: arrSongList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Arpage()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Atif Aslam",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: atifSongList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Afpage()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Tulsi Kumar",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: tuLsiSongList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Tulsipage()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Darshan Rawal",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: darshanSongList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: darpage()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Neha Kakkar",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: nehaSongList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Nehapage()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Bollywood Masala",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: radioList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Bollywood()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Ishita Vishwakarma",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: ishItaSongList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Ishitapage()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Shreya Ghosal",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullList(
+                                audio: shreyaSongList,
+                                name: widget.name,
+                                map: widget.map?["name"],
+                              );
+                            },
+                          ));
+                          print(widget.name);
+                        },
+                        child: Text(
+                          "View All >",
+                          style: TextStyle(color: Colors.white60, fontSize: 15),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Shreyapage()),
                 recentPlayed.isNotEmpty
                     ? Align(
                         alignment: Alignment(-0.9, 0),
@@ -297,7 +566,7 @@ class _MusicState extends State<Music> {
                                       Image.network(image, fit: BoxFit.cover),
                                 ),
                                 Text(
-                                  "$title-( $album )",
+                                  title,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,

@@ -12,6 +12,17 @@ class VideoProvider extends ChangeNotifier {
   Timer? timer;
   final assetsAudioPlayer = AssetsAudioPlayer();
   int index = 0;
+  List<Audio>? audio;
+  List<Audio> recentPlayed=[];
+  List<Audio> playList=[];
+  List<Audio> searchList=[];
+  void recentAdd(Audio audio){
+    recentPlayed.add(audio);
+    notifyListeners();
+  }
+
+
+
 
   void changeIndex(int index) {
     pIndex = index;
