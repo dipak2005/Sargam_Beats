@@ -8,16 +8,15 @@
 # Project Technologies:
 - Dart language
 - Flutter framework with MVC and Provider architecture
-# Project Requirements:
-- Knowledge of programming languages such as Dart.
-- Familiarity with the Flutter framework and media player technologies.
-- Understanding of user interface design principles and best practices.
-- Experience with mobile app development and related tools such as Android Studio or VS Code.
-- Ability to work independently.
 # Project Evaluation:
 - User satisfaction with the application’s functionality and UI/UX
 - Quality of code and project structure
 - Presentation quality and clarity of communication
 # ScreenShorts (ss):
 <img src>![md-1](https://github.com/dipak2005/Sargam_Beats/assets/143473007/047af967-e5e0-42a3-8838-d92c4e2b522d)
-<img src>
+<img src>![md5](https://github.com/dipak2005/Sargam_Beats/assets/143473007/381da34b-326f-4a54-95d0-9c2987b21fd5)
+<img src>![md9](https://github.com/dipak2005/Sargam_Beats/assets/143473007/cea7eda5-2ccb-4950-8c7c-32d325d3b007)
+<img src>![Uploading md13.jpg…]()
+
+
+
