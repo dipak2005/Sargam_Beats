@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../controller/videocontroller.dart';
 import '../model/ganalist/arrijitsong.dart';
+import '../model/list/bannerlist.dart';
 import '../model/recentlist.dart';
 
 class FullList extends StatefulWidget {
@@ -53,11 +54,12 @@ class _FullListState extends State<FullList> {
 
   // void runFilter(String enterKey) {
   //   List<Audio>? result = [];
-  //   if (enterKey.isEmpty) {
-  //     result = widget.audio;
-  //   } else {
-  //     result = widget.audio?.where((element) => element["${title1?.metas.title}"].toString()).toList();
-  //   }
+  //   List<Audio>? artist = artistList[index];
+    // if (enterKey.isEmpty) {
+    //   result = widget.audio;
+    // } else {
+    //   result = widget.audio?.where((element) => element["${widget.audio!}"]).toList();
+    // }
   // }
 
   @override
@@ -98,7 +100,7 @@ class _FullListState extends State<FullList> {
             itemCount: widget.audio?.length,
             itemBuilder: (context, index) {
               var ar = widget.audio?[index];
-              title1 = ar;
+              // title1 = widget.audio as Audio?;
               return StreamBuilder<Playing?>(
                   stream: assetsAudioPlayer.current,
                   builder: (context, snapshot) {
@@ -581,9 +583,9 @@ class _FullListState extends State<FullList> {
                                                           } else {
                                                             assetsAudioPlayer
                                                                 .playOrPause();
-                                                            recentPlayed.add(
-                                                                widget.audio![
-                                                                index]);
+                                                            Provider.of<VideoProvider>(context,listen: false).recentPlayed
+                                                                .add(widget
+                                                                .audio![index]);
                                                             assetsAudioPlayer
                                                                 .playlistPlayAtIndex(
                                                                 index);

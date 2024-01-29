@@ -690,7 +690,7 @@ class _DetailPageState extends State<DetailPage> {
                                                                   } else {
                                                                     assetsAudioPlayer
                                                                         .playOrPause();
-                                                                    recentPlayed
+                                                                    Provider.of<VideoProvider>(context,listen: false).recentPlayed
                                                                         .add(widget
                                                                             .audio![index]);
                                                                     assetsAudioPlayer

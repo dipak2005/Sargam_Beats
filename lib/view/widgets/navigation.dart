@@ -1,5 +1,12 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sargam_beats/controller/videocontroller.dart';
+import 'package:sargam_beats/view/home.dart';
+import 'package:sargam_beats/view/profile.dart';
+import 'package:sargam_beats/view/searchpage.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -14,6 +21,21 @@ class _NavigationState extends State<Navigation> {
     return Column(
       children: [
         NavigationBar(
+          onDestinationSelected: (value) {
+            Provider.of<VideoProvider>(context, listen: false)
+                .changeIndex(value);
+            print("hii $value");
+            if (value == 0) {
+              Navigator.pushNamed(context, "Home");
+            } else if (value == 1) {
+              SearchPage();
+            } else if (value == 2) {
+            } else {
+              Navigator.pushNamed(context, "Profile");
+            }
+          },
+          selectedIndex:
+              Provider.of<VideoProvider>(context, listen: false).index,
           backgroundColor: Color(0xff136DFF),
           height: MediaQuery.sizeOf(context).height * 0.07,
           animationDuration: Duration(microseconds: 200),

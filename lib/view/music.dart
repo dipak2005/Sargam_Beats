@@ -120,16 +120,16 @@ class _MusicState extends State<Music> {
                         onPageChanged: (index, reason) {
                           banner.changeIndex(index);
                         },
-                        autoPlayInterval: Duration(seconds: 2),
-                        aspectRatio: 2.3,
+                        autoPlayInterval: Duration(seconds: 3),
+                        aspectRatio: 2.4,
                         autoPlay: true,
                         initialPage: banner.pIndex,
-                        viewportFraction: 1.5,
-                        autoPlayAnimationDuration: Duration(seconds: 2),
+                        viewportFraction: 1.3,
+                        autoPlayAnimationDuration: Duration(seconds: 3),
                         autoPlayCurve: Curves.linear,
                         clipBehavior: Clip.antiAlias,
                         scrollDirection: Axis.horizontal,
-                        enlargeFactor: 1.3,
+                        enlargeFactor: 3,
                       ),
                     );
                   },
@@ -188,83 +188,85 @@ class _MusicState extends State<Music> {
                       Map<String, dynamic> sl = artistList[index];
                       SingerModel sm = SingerModel.fromMap(sl);
 
-                      return Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 90,
-                            backgroundColor: Colors.black38,
-                            child: InkWell(
-                              onTap: () {
-                                var audio = (index == 0)
-                                    ? arrSongList
-                                    : (index == 1)
-                                        ? atifSongList
-                                        : (index == 2)
-                                            ? darshanSongList
-                                            : (index == 3)
-                                                ? shreyaSongList
-                                                : (index == 4)
-                                                    ? tuLsiSongList
-                                                    : (index == 5)
-                                                        ? nehaSongList
-                                                        : ishItaSongList;
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      settings: RouteSettings(arguments: sl),
-                                      builder: (context) {
-                                        return DetailPage(
-                                          map: {}, name: sm.name,
-                                          audio: audio,
-                                          //     ? arrSongList[index]
-                                          //     : index == 1
-                                          //     ? atifSongList![index]
-                                          //     : index == 2
-                                          //     ? darshanSongList![index]
-                                          //     : index == 3
-                                          //     ? shreyaSongList![index]
-                                          //     : index == 4
-                                          //     ? tuLsiSongList![index]
-                                          //     : index == 5
-                                          //     ? nehaSongList[index]
-                                          //     : ishItaSongList[index],
-                                          index: index,
-                                        );
-                                      },
-                                    ));
-                              },
-                              radius: 80,
-                              child: Container(
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.25,
-                                  width: MediaQuery.sizeOf(context).width,
-                                  margin: EdgeInsetsDirectional.all(10),
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration:
-                                      BoxDecoration(shape: BoxShape.circle),
-                                  child: Image.asset(
-                                    artistList[index]["image"],
-                                    fit: BoxFit.fill,
-                                  )),
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 90,
+                              backgroundColor: Colors.black38,
+                              child: InkWell(
+                                onTap: () {
+                                  var audio = (index == 0)
+                                      ? arrSongList
+                                      : (index == 1)
+                                          ? atifSongList
+                                          : (index == 2)
+                                              ? darshanSongList
+                                              : (index == 3)
+                                                  ? shreyaSongList
+                                                  : (index == 4)
+                                                      ? tuLsiSongList
+                                                      : (index == 5)
+                                                          ? nehaSongList
+                                                          : ishItaSongList;
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        settings: RouteSettings(arguments: sl),
+                                        builder: (context) {
+                                          return DetailPage(
+                                            map: {}, name: sm.name,
+                                            audio: audio,
+                                            //     ? arrSongList[index]
+                                            //     : index == 1
+                                            //     ? atifSongList![index]
+                                            //     : index == 2
+                                            //     ? darshanSongList![index]
+                                            //     : index == 3
+                                            //     ? shreyaSongList![index]
+                                            //     : index == 4
+                                            //     ? tuLsiSongList![index]
+                                            //     : index == 5
+                                            //     ? nehaSongList[index]
+                                            //     : ishItaSongList[index],
+                                            index: index,
+                                          );
+                                        },
+                                      ));
+                                },
+                                radius: 80,
+                                child: Container(
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.25,
+                                    width: MediaQuery.sizeOf(context).width,
+                                    margin: EdgeInsetsDirectional.all(10),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration:
+                                        BoxDecoration(shape: BoxShape.circle),
+                                    child: Image.asset(
+                                      artistList[index]["image"],
+                                      fit: BoxFit.fill,
+                                    )),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01,
-                          ),
-                          Text(
-                            sm.name ?? "",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          Text(
-                            "Artist Radio",
-                            style: TextStyle(
-                                color: Colors.white70,
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
+                            SizedBox(
+                              height: MediaQuery.sizeOf(context).height * 0.01,
+                            ),
+                            Text(
+                              sm.name ?? "",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            Text(
+                              "Artist Radio",
+                              style: TextStyle(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -525,7 +527,9 @@ class _MusicState extends State<Music> {
                 SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.25,
                     child: Shreyapage()),
-                recentPlayed.isNotEmpty
+                Provider.of<VideoProvider>(context, listen: false)
+                        .recentPlayed
+                        .isNotEmpty
                     ? Align(
                         alignment: Alignment(-0.9, 0),
                         child: Text(
@@ -539,40 +543,63 @@ class _MusicState extends State<Music> {
                     : SizedBox.shrink(),
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.25,
-                  child: recentPlayed.isNotEmpty
+                  child: Provider.of<VideoProvider>(context, listen: false)
+                          .recentPlayed
+                          .isNotEmpty
                       ? ListView.builder(
                           scrollDirection: Axis.horizontal,
                           // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           //     crossAxisCount: recentPlayed.length),
-                          itemCount: recentPlayed.length,
+                          itemCount:
+                              Provider.of<VideoProvider>(context, listen: false)
+                                  .recentPlayed
+                                  .length,
                           itemBuilder: (context, index) {
-                            var image =
-                                recentPlayed[index].metas.image?.path ?? '';
-                            var title = recentPlayed[index].metas.title ?? '';
-                            var album = recentPlayed[index].metas.album ?? '';
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.all(10),
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.18,
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.39,
-                                  child:
-                                      Image.network(image, fit: BoxFit.cover),
-                                ),
-                                Text(
-                                  title,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
+                            var image = Provider.of<VideoProvider>(context,
+                                        listen: false)
+                                    .recentPlayed[index]
+                                    .metas
+                                    .image
+                                    ?.path ??
+                                '';
+                            var title = Provider.of<VideoProvider>(context,
+                                        listen: false)
+                                    .recentPlayed[index]
+                                    .metas
+                                    .title ??
+                                '';
+                            var album = Provider.of<VideoProvider>(context,
+                                        listen: false)
+                                    .recentPlayed[index]
+                                    .metas
+                                    .album ??
+                                '';
+                            return SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.all(10),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.18,
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.39,
+                                    child:
+                                        Image.network(image, fit: BoxFit.cover),
+                                  ),
+                                  Text(
+                                    title,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         )

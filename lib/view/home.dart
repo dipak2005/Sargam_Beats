@@ -33,8 +33,12 @@ class _HomeState extends State<Home> {
   ChewieController? chewieController;
   bool isShow = true;
   bool isVideo = false;
-
-
+  List<String> arVideoList = [
+    "assets/videos/lut.mp4",
+    "assets/videos/saware.mp4",
+    // "assets/videos/kabira.mp4",
+  ];
+  int index = 0;
 
   @override
   void dispose() {
@@ -57,13 +61,19 @@ class _HomeState extends State<Home> {
       autoStart: false,
     );
 
-    controller = VideoPlayerController.networkUrl(Uri.parse(
-        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"))
-      ..initialize().then((value) {
-        chewieController = ChewieController(
-            videoPlayerController: controller, autoPlay: false, looping: true);
-        setState(() {});
-      });
+    // while (arVideoList.isNotEmpty) {
+      String videoList = arVideoList[index];
+      controller = VideoPlayerController.asset(videoList)
+        ..initialize().then((value) {
+          chewieController = ChewieController(
+              videoPlayerController: controller,
+              autoPlay: false,
+              looping: true);
+          setState(() {});
+          // chewieController?.setLooping(isShow);
+          index++;
+        });
+    // }
   }
 
   @override
@@ -203,23 +213,36 @@ class _HomeState extends State<Home> {
                                                 0.01,
                                           ),
                                           if (isVideo == true)
-                                            Container(
-                                              height: MediaQuery.sizeOf(context)
-                                                      .height /
-                                                  3,
-                                              width: MediaQuery.sizeOf(context)
-                                                  .width,
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: AspectRatio(
-                                                aspectRatio: controller
-                                                    .value.aspectRatio,
-                                                child: VideoPlayer(controller),
+                                            InkWell(
+                                              onTap: () {},
+                                              child: Container(
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height /
+                                                        3,
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                        .width,
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    AspectRatio(
+                                                      aspectRatio: controller
+                                                          .value.aspectRatio,
+                                                      child: Chewie(
+                                                        // controller:
+                                                        controller:
+                                                            chewieController!,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             )
                                           else
@@ -250,13 +273,21 @@ class _HomeState extends State<Home> {
                                                         "";
                                                     var song = snapshot
                                                         .data?.playlist.current;
-                                                    if (recentPlayed
+                                                    if (Provider.of<
+                                                                VideoProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .recentPlayed
                                                         .contains(song)) {
                                                       print("Already");
                                                     } else if (song != null) {
                                                       print(
                                                           "object ${song.metas.title}");
-                                                      recentPlayed.add(song);
+                                                      Provider.of<VideoProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .recentPlayed
+                                                          .add(song);
                                                     }
                                                     if (snapshot.data != null) {
                                                       return Image.network(
@@ -350,7 +381,11 @@ class _HomeState extends State<Home> {
                                                 var song = snapshot
                                                     .data?.playlist.current;
                                                 if (song != null) {
-                                                  recentPlayed.add(song);
+                                                  Provider.of<VideoProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .recentPlayed
+                                                      .add(song);
                                                 }
 
                                                 return ListTile(
@@ -480,15 +515,18 @@ class _HomeState extends State<Home> {
                                                       //     );
                                                       //   },
                                                       // );
-                                                      setState(() {});
 
-                                                      chewieController?.isLive;
+                                                      // chewieController?.deviceOrientationsOnEnterFullScreen;
                                                       if (controller
                                                           .value.isPlaying) {
                                                         controller.pause();
                                                       } else {
                                                         isVideo = true;
                                                         controller.play();
+                                                        Provider.of<VideoProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .refresh();
                                                       }
                                                     },
                                                   ),
@@ -650,7 +688,9 @@ class _HomeState extends State<Home> {
 
                                                                         assetsAudioPlayer
                                                                             .playOrPause();
-                                                                        recentPlayed
+                                                                        Provider.of<VideoProvider>(context,
+                                                                                listen: false)
+                                                                            .recentPlayed
                                                                             .add(song!);
                                                                       }
                                                                     },
@@ -765,7 +805,7 @@ class _HomeState extends State<Home> {
                 );
               },
             ),
-            Navigation(),
+            // Navigation(),
           ],
         ),
       ),

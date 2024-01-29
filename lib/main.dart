@@ -8,6 +8,8 @@ import 'package:sargam_beats/view/detailpage.dart';
 import 'package:sargam_beats/view/home.dart';
 import 'package:sargam_beats/view/list.dart';
 import 'package:sargam_beats/view/music.dart';
+import 'package:sargam_beats/view/profile.dart';
+import 'package:sargam_beats/view/searchpage.dart';
 import 'package:sargam_beats/view/splash.dart';
 import 'package:sargam_beats/view/video.dart';
 
@@ -38,6 +40,8 @@ class Sargam_Beats extends StatelessWidget {
           "DetailPage": (context) => DetailPage(),
           "FullList": (context) => FullList(),
           "Videoplay": (context) => Videoplay(),
+          "SearchPage": (context) => SearchPage(),
+          "Profile": (context) => Profile(),
         },
       ),
     );

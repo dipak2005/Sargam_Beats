@@ -4,29 +4,56 @@ import 'dart:async';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+
+import '../model/ganalist/radiolist.dart';
 
 class VideoProvider extends ChangeNotifier {
   CarouselController carouselController = CarouselController();
   int pIndex = 0;
   Timer? timer;
-  final assetsAudioPlayer = AssetsAudioPlayer();
+
   int index = 0;
   List<Audio>? audio;
+
+  AssetsAudioPlayer assetsAudioPlayer=AssetsAudioPlayer();
+  late VideoPlayerController controller;
+  ChewieController? chewieController;
+
+
   List<Audio> recentPlayed=[];
+  List<Audio> favList=[];
   List<Audio> playList=[];
   List<Audio> searchList=[];
+
+
+
   void recentAdd(Audio audio){
     recentPlayed.add(audio);
     notifyListeners();
   }
+  void fav(Audio audio){
+    favList.add(audio);
+    notifyListeners();
+  }
 
+  void vPlay(){
+
+
+    controller = VideoPlayerController.asset("assets/videos/lut.mp4")
+      ..initialize().then((value) {
+        chewieController = ChewieController(
+            videoPlayerController: controller, autoPlay: false, looping: true);
+        notifyListeners();
+      });
+  }
 
 
 
   void changeIndex(int index) {
     pIndex = index;
-    carouselController.animateToPage(index);
     notifyListeners();
   }
 
