@@ -16,7 +16,8 @@
 <img src>![md-1](https://github.com/dipak2005/Sargam_Beats/assets/143473007/047af967-e5e0-42a3-8838-d92c4e2b522d)
 <img src>![md5](https://github.com/dipak2005/Sargam_Beats/assets/143473007/381da34b-326f-4a54-95d0-9c2987b21fd5)
 <img src>![md9](https://github.com/dipak2005/Sargam_Beats/assets/143473007/cea7eda5-2ccb-4950-8c7c-32d325d3b007)
-<img src>![Uploading md13.jpg…]()
+<img src>![md13](https://github.com/dipak2005/Sargam_Beats/assets/143473007/e03f1444-553c-4e24-9390-fa70e8440b9d)
+
 
 
 
